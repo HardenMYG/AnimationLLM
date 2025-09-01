@@ -1,0 +1,41 @@
+{
+  "testuser": {
+    "email": "test@example.com",
+    "password": "ecd71870d1963316a97e3ac3408c9835ad8cf0f3c1bc703527c30265534f75ae",
+    "created_at": "2025-07-16T15:14:30.243937"
+  },
+  "wusir": {
+    "email": "16603913770@163.com",
+    "password": "6b8888b890c736eed113b3b176ba0538cf0a2d6f73c87e45d9fee4b4a4a63974",
+    "created_at": "2025-07-16T15:21:58.508993"
+  },
+  "lxy": {
+    "email": "3245949514@qq.com",
+    "password": "4aa0c0a6d289f2f46850ba7887f7903783d02eef52b214da2926c4307b5dead2",
+    "created_at": "2025-07-19T16:55:10.465994"
+  },
+  "pzh": {
+    "email": "310698690@qq.com",
+    "password": "32d7da139db629c373d2118b4991889764bcae508aca47f7fbf9b61ac412522f",
+    "created_at": "2025-07-19T19:18:31.810439"
+  },
+  "qwe": {
+    "email": "3106986691@qq.com",
+    "password": "60b40b7846a7afe973ce089f19068cffc53e40fe28cd076f937c644f6127aad6",
+    "created_at": "2025-07-19T19:47:13.291004"
+  },
+  "GMY": {
+    "email": "123@qq.com",
+    "password": "5d26a0495f925fa27a605c6707c368cad7691b227ee61d6aa05355c486aef800",
+    "created_at": "2025-07-20T12:55:24.657745",
+    "favorites": [
+      "《四月是你的谎言》"
+    ]
+  },
+  "MYG": {
+    "email": "1234@qq.com",
+    "password": "5d26a0495f925fa27a605c6707c368cad7691b227ee61d6aa05355c486aef800",
+    "created_at": "2025-07-21T10:22:12.829205",
+    "favorites": []
+  }
+}

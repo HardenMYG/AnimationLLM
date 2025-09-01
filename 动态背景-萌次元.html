@@ -1,0 +1,1393 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>萌AL</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: linear-gradient(45deg, #0a050a, #1a0f1a);
+        }
+        
+        canvas {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 100vw;
+            z-index: 1;
+        }
+        
+        /* 登录注册容器 */
+        .auth-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            width: 400px;
+            max-width: 90vw;
+        }
+
+        /* 表单卡片 */
+        .form-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .form-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Logo样式 */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
+            border-color: rgba(255, 139, 171, 0.6);
+            box-shadow: 0 15px 40px rgba(255, 139, 171, 0.3);
+        }
+
+        @keyframes logoFloat {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* 标题样式 */
+        .form-title {
+            color: white;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 输入框样式 */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .input-field:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        /* 按钮样式 */
+        .btn {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b9d, #ff8fab);
+            color: white;
+            box-shadow: 0 10px 20px rgba(255, 107, 157, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(255, 107, 157, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* 切换链接 */
+        .switch-form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .switch-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .switch-link:hover {
+            color: #ff8fab;
+            text-shadow: 0 0 10px rgba(255, 139, 171, 0.5);
+        }
+
+        /* 表单切换动画 */
+        .form-hidden {
+            display: none;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        .form-visible {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* 成功消息 */
+        .success-message {
+            background: rgba(76, 175, 80, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        /* 错误消息 */
+        .error-message {
+            background: rgba(244, 67, 54, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 480px) {
+            .form-card {
+                padding: 30px 20px;
+            }
+            
+            .form-title {
+                font-size: 2rem;
+            }
+
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+
+            .auth-container {
+                width: 350px;
+            }
+        }
+
+        /* 额外的装饰效果 */
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, 
+                rgba(255, 107, 157, 0.1), 
+                rgba(255, 139, 171, 0.1), 
+                rgba(255, 175, 204, 0.1));
+            border-radius: 22px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .form-card:hover::before {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- 登录注册界面 -->
+    <div class="auth-container">
+        <!-- 登录表单 -->
+        <div id="loginForm" class="form-card form-visible">
+            <div class="logo-container">
+                <img src="生成二次元Logo头像.png" alt="萌AL Logo" class="logo">
+            </div>
+            <h2 class="form-title">萌AL 登录</h2>
+            <div class="success-message" id="loginSuccess"></div>
+            <div class="error-message" id="loginError"></div>
+            
+            <form onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <input type="text" class="input-field" placeholder="用户名或邮箱" required id="loginUsername">
+                </div>
+                <div class="input-group">
+                    <input type="password" class="input-field" placeholder="密码" required id="loginPassword">
+                </div>
+                <button type="submit" class="btn btn-primary">登录</button>
+            </form>
+            
+            <div class="switch-form">
+                <span style="color: rgba(255, 255, 255, 0.6);">还没有账号？</span>
+                <a class="switch-link" onclick="showRegister()">立即注册</a>
+            </div>
+        </div>
+
+        <!-- 注册表单 -->
+        <div id="registerForm" class="form-card form-hidden">
+            <div class="logo-container">
+                <img src="生成二次元Logo头像.png" alt="萌AL Logo" class="logo">
+            </div>
+            <h2 class="form-title">萌AL 注册</h2>
+            <div class="success-message" id="registerSuccess"></div>
+            <div class="error-message" id="registerError"></div>
+            
+            <form onsubmit="handleRegister(event)">
+                <div class="input-group">
+                    <input type="text" class="input-field" placeholder="用户名" required id="regUsername">
+                </div>
+                <div class="input-group">
+                    <input type="email" class="input-field" placeholder="邮箱" required id="regEmail">
+                </div>
+                <div class="input-group">
+                    <input type="password" class="input-field" placeholder="密码" required id="regPassword">
+                </div>
+                <div class="input-group">
+                    <input type="password" class="input-field" placeholder="确认密码" required id="regConfirmPassword">
+                </div>
+                <button type="submit" class="btn btn-primary">注册</button>
+            </form>
+            
+            <div class="switch-form">
+                <span style="color: rgba(255, 255, 255, 0.6);">已有账号？</span>
+                <a class="switch-link" onclick="showLogin()">立即登录</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 动态背景画布 -->
+    <canvas id="sakura"></canvas>
+
+    <!-- 樱花效果脚本 -->
+    <script>
+        // 工具函数
+        var Vector3 = {};
+        var Matrix44 = {};
+        Vector3.create = function(x, y, z) {
+            return {'x':x, 'y':y, 'z':z};
+        };
+        Vector3.dot = function (v0, v1) {
+            return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z;
+        };
+        Vector3.cross = function (v, v0, v1) {
+            v.x = v0.y * v1.z - v0.z * v1.y;
+            v.y = v0.z * v1.x - v0.x * v1.z;
+            v.z = v0.x * v1.y - v0.y * v1.x;
+        };
+        Vector3.normalize = function (v) {
+            var l = v.x * v.x + v.y * v.y + v.z * v.z;
+            if(l > 0.00001) {
+                l = 1.0 / Math.sqrt(l);
+                v.x *= l;
+                v.y *= l;
+                v.z *= l;
+            }
+        };
+        Vector3.arrayForm = function(v) {
+            if(v.array) {
+                v.array[0] = v.x;
+                v.array[1] = v.y;
+                v.array[2] = v.z;
+            }
+            else {
+                v.array = new Float32Array([v.x, v.y, v.z]);
+            }
+            return v.array;
+        };
+        Matrix44.createIdentity = function () {
+            return new Float32Array([1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]);
+        };
+        Matrix44.loadProjection = function (m, aspect, vdeg, near, far) {
+            var h = near * Math.tan(vdeg * Math.PI / 180.0 * 0.5) * 2.0;
+            var w = h * aspect;
+            
+            m[0] = 2.0 * near / w;
+            m[1] = 0.0;
+            m[2] = 0.0;
+            m[3] = 0.0;
+            
+            m[4] = 0.0;
+            m[5] = 2.0 * near / h;
+            m[6] = 0.0;
+            m[7] = 0.0;
+            
+            m[8] = 0.0;
+            m[9] = 0.0;
+            m[10] = -(far + near) / (far - near);
+            m[11] = -1.0;
+            
+            m[12] = 0.0;
+            m[13] = 0.0;
+            m[14] = -2.0 * far * near / (far - near);
+            m[15] = 0.0;
+        };
+        Matrix44.loadLookAt = function (m, vpos, vlook, vup) {
+            var frontv = Vector3.create(vpos.x - vlook.x, vpos.y - vlook.y, vpos.z - vlook.z);
+            Vector3.normalize(frontv);
+            var sidev = Vector3.create(1.0, 0.0, 0.0);
+            Vector3.cross(sidev, vup, frontv);
+            Vector3.normalize(sidev);
+            var topv = Vector3.create(1.0, 0.0, 0.0);
+            Vector3.cross(topv, frontv, sidev);
+            Vector3.normalize(topv);
+            
+            m[0] = sidev.x;
+            m[1] = topv.x;
+            m[2] = frontv.x;
+            m[3] = 0.0;
+            
+            m[4] = sidev.y;
+            m[5] = topv.y;
+            m[6] = frontv.y;
+            m[7] = 0.0;
+            
+            m[8] = sidev.z;
+            m[9] = topv.z;
+            m[10] = frontv.z;
+            m[11] = 0.0;
+            
+            m[12] = -(vpos.x * m[0] + vpos.y * m[4] + vpos.z * m[8]);
+            m[13] = -(vpos.x * m[1] + vpos.y * m[5] + vpos.z * m[9]);
+            m[14] = -(vpos.x * m[2] + vpos.y * m[6] + vpos.z * m[10]);
+            m[15] = 1.0;
+        };
+
+        // 时间信息
+        var timeInfo = {
+            'start':0, 'prev':0,
+            'delta':0, 'elapsed':0
+        };
+
+        // WebGL 相关变量
+        var gl;
+        var renderSpec = {
+            'width':0,
+            'height':0,
+            'aspect':1,
+            'array':new Float32Array(3),
+            'halfWidth':0,
+            'halfHeight':0,
+            'halfArray':new Float32Array(3)
+        };
+        renderSpec.setSize = function(w, h) {
+            renderSpec.width = w;
+            renderSpec.height = h;
+            renderSpec.aspect = renderSpec.width / renderSpec.height;
+            renderSpec.array[0] = renderSpec.width;
+            renderSpec.array[1] = renderSpec.height;
+            renderSpec.array[2] = renderSpec.aspect;
+            
+            renderSpec.halfWidth = Math.floor(w / 2);
+            renderSpec.halfHeight = Math.floor(h / 2);
+            renderSpec.halfArray[0] = renderSpec.halfWidth;
+            renderSpec.halfArray[1] = renderSpec.halfHeight;
+            renderSpec.halfArray[2] = renderSpec.halfWidth / renderSpec.halfHeight;
+        };
+
+        function createRenderTarget(w, h) {
+            var ret = {
+                'width':w,
+                'height':h,
+                'sizeArray':new Float32Array([w, h, w / h]),
+                'dtxArray':new Float32Array([1.0 / w, 1.0 / h])
+            };
+            ret.frameBuffer = gl.createFramebuffer();
+            ret.renderBuffer = gl.createRenderbuffer();
+            ret.texture = gl.createTexture();
+            
+            gl.bindTexture(gl.TEXTURE_2D, ret.texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            
+            gl.bindFramebuffer(gl.FRAMEBUFFER, ret.frameBuffer);
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, ret.texture, 0);
+            
+            gl.bindRenderbuffer(gl.RENDERBUFFER, ret.renderBuffer);
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, w, h);
+            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, ret.renderBuffer);
+            
+            gl.bindTexture(gl.TEXTURE_2D, null);
+            gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            
+            return ret;
+        }
+
+        function compileShader(shtype, shsrc) {
+            var retsh = gl.createShader(shtype);
+            
+            gl.shaderSource(retsh, shsrc);
+            gl.compileShader(retsh);
+            
+            if(!gl.getShaderParameter(retsh, gl.COMPILE_STATUS)) {
+                var errlog = gl.getShaderInfoLog(retsh);
+                gl.deleteShader(retsh);
+                console.error(errlog);
+                return null;
+            }
+            return retsh;
+        }
+
+        function createShader(vtxsrc, frgsrc, uniformlist, attrlist) {
+            var vsh = compileShader(gl.VERTEX_SHADER, vtxsrc);
+            var fsh = compileShader(gl.FRAGMENT_SHADER, frgsrc);
+            
+            if(vsh == null || fsh == null) {
+                return null;
+            }
+            
+            var prog = gl.createProgram();
+            gl.attachShader(prog, vsh);
+            gl.attachShader(prog, fsh);
+            
+            gl.deleteShader(vsh);
+            gl.deleteShader(fsh);
+            
+            gl.linkProgram(prog);
+            if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+                var errlog = gl.getProgramInfoLog(prog);
+                console.error(errlog);
+                return null;
+            }
+            
+            if(uniformlist) {
+                prog.uniforms = {};
+                for(var i = 0; i < uniformlist.length; i++) {
+                    prog.uniforms[uniformlist[i]] = gl.getUniformLocation(prog, uniformlist[i]);
+                }
+            }
+            
+            if(attrlist) {
+                prog.attributes = {};
+                for(var i = 0; i < attrlist.length; i++) {
+                    var attr = attrlist[i];
+                    prog.attributes[attr] = gl.getAttribLocation(prog, attr);
+                }
+            }
+            
+            return prog;
+        }
+
+        function useShader(prog) {
+            gl.useProgram(prog);
+            for(var attr in prog.attributes) {
+                gl.enableVertexAttribArray(prog.attributes[attr]);;
+            }
+        }
+
+        function unuseShader(prog) {
+            for(var attr in prog.attributes) {
+                gl.disableVertexAttribArray(prog.attributes[attr]);;
+            }
+            gl.useProgram(null);
+        }
+
+        // 投影和相机设置
+        var projection = {
+            'angle':60,
+            'nearfar':new Float32Array([0.1, 100.0]),
+            'matrix':Matrix44.createIdentity()
+        };
+        var camera = {
+            'position':Vector3.create(0, 0, 100),
+            'lookat':Vector3.create(0, 0, 0),
+            'up':Vector3.create(0, 1, 0),
+            'dof':Vector3.create(10.0, 4.0, 8.0),
+            'matrix':Matrix44.createIdentity()
+        };
+
+        var pointFlower = {};
+        var effectLib = {};
+        var sceneStandBy = false;
+
+        // 樱花粒子类
+        var BlossomParticle = function () {
+            this.velocity = new Array(3);
+            this.rotation = new Array(3);
+            this.position = new Array(3);
+            this.euler = new Array(3);
+            this.size = 1.0;
+            this.alpha = 1.0;
+            this.zkey = 0.0;
+        };
+
+        BlossomParticle.prototype.setVelocity = function (vx, vy, vz) {
+            this.velocity[0] = vx;
+            this.velocity[1] = vy;
+            this.velocity[2] = vz;
+        };
+
+        BlossomParticle.prototype.setRotation = function (rx, ry, rz) {
+            this.rotation[0] = rx;
+            this.rotation[1] = ry;
+            this.rotation[2] = rz;
+        };
+
+        BlossomParticle.prototype.setPosition = function (nx, ny, nz) {
+            this.position[0] = nx;
+            this.position[1] = ny;
+            this.position[2] = nz;
+        };
+
+        BlossomParticle.prototype.setEulerAngles = function (rx, ry, rz) {
+            this.euler[0] = rx;
+            this.euler[1] = ry;
+            this.euler[2] = rz;
+        };
+
+        BlossomParticle.prototype.setSize = function (s) {
+            this.size = s;
+        };
+
+        BlossomParticle.prototype.update = function (dt, et) {
+            this.position[0] += this.velocity[0] * dt;
+            this.position[1] += this.velocity[1] * dt;
+            this.position[2] += this.velocity[2] * dt;
+            
+            this.euler[0] += this.rotation[0] * dt;
+            this.euler[1] += this.rotation[1] * dt;
+            this.euler[2] += this.rotation[2] * dt;
+        };
+
+        // 背景着色器源码
+        var fx_common_vsh = `
+            uniform vec3 uResolution;
+            attribute vec2 aPosition;
+
+            varying vec2 texCoord;
+            varying vec2 screenCoord;
+
+            void main(void) {
+                gl_Position = vec4(aPosition, 0.0, 1.0);
+                texCoord = aPosition.xy * 0.5 + vec2(0.5, 0.5);
+                screenCoord = aPosition.xy * vec2(uResolution.z, 1.0);
+            }
+        `;
+
+        var bg_fsh = `
+            #ifdef GL_ES
+            precision highp float;
+            #endif
+
+            uniform vec2 uTimes;
+
+            varying vec2 texCoord;
+            varying vec2 screenCoord;
+
+            void main(void) {
+                vec3 col;
+                float c;
+                vec2 tmpv = texCoord * vec2(0.8, 1.0) - vec2(0.85, 0.90);
+                c = exp(-pow(length(tmpv) * 2.0, 2.0));
+                
+                // 右上角灰度渐变（不是纯白色）
+                float rightTopBrightness = smoothstep(0.3, 1.0, texCoord.x) * smoothstep(0.6, 1.0, texCoord.y) * 0.25;
+                
+                col = mix(vec3(0.08, 0.05, 0.12), vec3(0.96, 0.98, 1.0) * 2.0, c);
+                // 添加灰度渐变而不是纯白色
+                col += vec3(rightTopBrightness * 0.6, rightTopBrightness * 0.65, rightTopBrightness * 0.7);
+                
+                gl_FragColor = vec4(col * 0.8, 1.0);
+            }
+        `;
+
+        // 樱花粒子着色器源码
+        var sakura_point_vsh = `
+            uniform mat4 uProjection;
+            uniform mat4 uModelview;
+            uniform vec3 uResolution;
+            uniform vec3 uOffset;
+            uniform vec3 uDOF;
+            uniform vec3 uFade;
+
+            attribute vec3 aPosition;
+            attribute vec3 aEuler;
+            attribute vec2 aMisc;
+
+            varying vec3 pposition;
+            varying float psize;
+            varying float palpha;
+            varying float pdist;
+            varying vec3 normX;
+            varying vec3 normY;
+            varying vec3 normZ;
+            varying vec3 normal;
+            varying float diffuse;
+            varying float specular;
+            varying float rstop;
+            varying float distancefade;
+
+            void main(void) {
+                vec4 pos = uModelview * vec4(aPosition + uOffset, 1.0);
+                gl_Position = uProjection * pos;
+                gl_PointSize = aMisc.x * uProjection[1][1] / -pos.z * uResolution.y * 0.5;
+                
+                pposition = pos.xyz;
+                psize = aMisc.x;
+                pdist = length(pos.xyz);
+                palpha = smoothstep(0.0, 1.0, (pdist - 0.1) / uFade.z);
+                
+                vec3 elrsn = sin(aEuler);
+                vec3 elrcs = cos(aEuler);
+                mat3 rotx = mat3(
+                    1.0, 0.0, 0.0,
+                    0.0, elrcs.x, elrsn.x,
+                    0.0, -elrsn.x, elrcs.x
+                );
+                mat3 roty = mat3(
+                    elrcs.y, 0.0, -elrsn.y,
+                    0.0, 1.0, 0.0,
+                    elrsn.y, 0.0, elrcs.y
+                );
+                mat3 rotz = mat3(
+                    elrcs.z, elrsn.z, 0.0, 
+                    -elrsn.z, elrcs.z, 0.0,
+                    0.0, 0.0, 1.0
+                );
+                mat3 rotmat = rotx * roty * rotz;
+                normal = rotmat[2];
+                
+                mat3 trrotm = mat3(
+                    rotmat[0][0], rotmat[1][0], rotmat[2][0],
+                    rotmat[0][1], rotmat[1][1], rotmat[2][1],
+                    rotmat[0][2], rotmat[1][2], rotmat[2][2]
+                );
+                normX = trrotm[0];
+                normY = trrotm[1];
+                normZ = trrotm[2];
+                
+                const vec3 lit = vec3(0.6917144638660746, 0.6917144638660746, -0.20751433915982237);
+                
+                float tmpdfs = dot(lit, normal);
+                if(tmpdfs < 0.0) {
+                    normal = -normal;
+                    tmpdfs = dot(lit, normal);
+                }
+                diffuse = 0.4 + tmpdfs;
+                
+                vec3 eyev = normalize(-pos.xyz);
+                if(dot(eyev, normal) > 0.0) {
+                    vec3 hv = normalize(eyev + lit);
+                    specular = pow(max(dot(hv, normal), 0.0), 20.0);
+                }
+                else {
+                    specular = 0.0;
+                }
+                
+                rstop = clamp((abs(pdist - uDOF.x) - uDOF.y) / uDOF.z, 0.0, 1.0);
+                rstop = pow(rstop, 0.5);
+                distancefade = min(1.0, exp((uFade.x - pdist) * 0.69315 / uFade.y));
+            }
+        `;
+
+        var sakura_point_fsh = `
+            #ifdef GL_ES
+            precision highp float;
+            #endif
+
+            uniform vec3 uDOF;
+            uniform vec3 uFade;
+
+            const vec3 fadeCol = vec3(0.15, 0.10, 0.20);
+
+            varying vec3 pposition;
+            varying float psize;
+            varying float palpha;
+            varying float pdist;
+            varying vec3 normX;
+            varying vec3 normY;
+            varying vec3 normZ;
+            varying vec3 normal;
+            varying float diffuse;
+            varying float specular;
+            varying float rstop;
+            varying float distancefade;
+
+            float ellipse(vec2 p, vec2 o, vec2 r) {
+                vec2 lp = (p - o) / r;
+                return length(lp) - 1.0;
+            }
+
+            void main(void) {
+                vec3 p = vec3(gl_PointCoord - vec2(0.5, 0.5), 0.0) * 2.0;
+                vec3 d = vec3(0.0, 0.0, -1.0);
+                float nd = normZ.z;
+                if(abs(nd) < 0.0001) discard;
+                
+                float np = dot(normZ, p);
+                vec3 tp = p + d * np / nd;
+                vec2 coord = vec2(dot(normX, tp), dot(normY, tp));
+                
+                const float flwrsn = 0.258819045102521;
+                const float flwrcs = 0.965925826289068;
+                mat2 flwrm = mat2(flwrcs, -flwrsn, flwrsn, flwrcs);
+                vec2 flwrp = vec2(abs(coord.x), coord.y) * flwrm;
+                
+                float r;
+                if(flwrp.x < 0.0) {
+                    r = ellipse(flwrp, vec2(0.065, 0.024) * 0.5, vec2(0.36, 0.96) * 0.5);
+                }
+                else {
+                    r = ellipse(flwrp, vec2(0.065, 0.024) * 0.5, vec2(0.58, 0.96) * 0.5);
+                }
+                
+                if(r > rstop) discard;
+                
+                vec3 col = mix(vec3(1.0, 0.95, 0.9), vec3(1.0, 0.98, 0.95), r);
+                float grady = mix(0.2, 1.0, pow(coord.y * 0.5 + 0.5, 0.35));
+                col *= vec3(1.0, grady, grady);
+                col *= mix(0.95, 1.0, pow(abs(coord.x), 0.3));
+                col = col * diffuse + specular * 1.2;
+                
+                col = mix(fadeCol, col, distancefade);
+                
+                float alpha = (rstop > 0.001)? (0.5 - r / (rstop * 2.0)) : 1.0;
+                alpha = smoothstep(0.0, 1.0, alpha) * palpha;
+                
+                gl_FragColor = vec4(col * 1.0, alpha);
+            }
+        `;
+
+        // 效果工具函数
+        function createEffectProgram(vtxsrc, frgsrc, exunifs, exattrs) {
+            var ret = {};
+            var unifs = ['uResolution', 'uSrc', 'uDelta'];
+            if(exunifs) {
+                unifs = unifs.concat(exunifs);
+            }
+            var attrs = ['aPosition'];
+            if(exattrs) {
+                attrs = attrs.concat(exattrs);
+            }
+            
+            ret.program = createShader(vtxsrc, frgsrc, unifs, attrs);
+            useShader(ret.program);
+            
+            ret.dataArray = new Float32Array([
+                -1.0, -1.0,
+                 1.0, -1.0,
+                -1.0,  1.0,
+                 1.0,  1.0
+            ]);
+            ret.buffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, ret.buffer);
+            gl.bufferData(gl.ARRAY_BUFFER, ret.dataArray, gl.STATIC_DRAW);
+            
+            gl.bindBuffer(gl.ARRAY_BUFFER, null);
+            unuseShader(ret.program);
+            
+            return ret;
+        }
+
+        function useEffect(fxobj, srctex) {
+            var prog = fxobj.program;
+            useShader(prog);
+            gl.uniform3fv(prog.uniforms.uResolution, renderSpec.array);
+            
+            if(srctex != null) {
+                gl.uniform2fv(prog.uniforms.uDelta, srctex.dtxArray);
+                gl.uniform1i(prog.uniforms.uSrc, 0);
+                
+                gl.activeTexture(gl.TEXTURE0);
+                gl.bindTexture(gl.TEXTURE_2D, srctex.texture);
+            }
+        }
+
+        function drawEffect(fxobj) {
+            gl.bindBuffer(gl.ARRAY_BUFFER, fxobj.buffer);
+            gl.vertexAttribPointer(fxobj.program.attributes.aPosition, 2, gl.FLOAT, false, 0, 0);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        }
+
+        function unuseEffect(fxobj) {
+            unuseShader(fxobj.program);
+        }
+
+        // 创建效果库
+        function createEffectLib() {
+            // 背景效果
+            effectLib.sceneBg = createEffectProgram(fx_common_vsh, bg_fsh, ['uTimes'], null);
+        }
+
+        // 背景渲染函数
+        function createBackground() {
+            // 背景初始化
+        }
+
+        function initBackground() {
+            // 背景参数初始化
+        }
+
+        function renderBackground() {
+            gl.disable(gl.DEPTH_TEST);
+            
+            useEffect(effectLib.sceneBg, null);
+            gl.uniform2f(effectLib.sceneBg.program.uniforms.uTimes, timeInfo.elapsed, timeInfo.delta);
+            drawEffect(effectLib.sceneBg);
+            unuseEffect(effectLib.sceneBg);
+            
+            gl.enable(gl.DEPTH_TEST);
+        }
+
+        function createPointFlowers() {
+            var prm = gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE);
+            renderSpec.pointSize = {'min':prm[0], 'max':prm[1]};
+            
+            pointFlower.program = createShader(
+                sakura_point_vsh, sakura_point_fsh,
+                ['uProjection', 'uModelview', 'uResolution', 'uOffset', 'uDOF', 'uFade'],
+                ['aPosition', 'aEuler', 'aMisc']
+            );
+            
+            useShader(pointFlower.program);
+            pointFlower.offset = new Float32Array([0.0, 0.0, 0.0]);
+            pointFlower.fader = Vector3.create(0.0, 10.0, 0.0);
+            
+            pointFlower.numFlowers = 1600;
+            pointFlower.particles = new Array(pointFlower.numFlowers);
+            pointFlower.dataArray = new Float32Array(pointFlower.numFlowers * (3 + 3 + 2));
+            pointFlower.positionArrayOffset = 0;
+            pointFlower.eulerArrayOffset = pointFlower.numFlowers * 3;
+            pointFlower.miscArrayOffset = pointFlower.numFlowers * 6;
+            
+            pointFlower.buffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, pointFlower.buffer);
+            gl.bufferData(gl.ARRAY_BUFFER, pointFlower.dataArray, gl.DYNAMIC_DRAW);
+            gl.bindBuffer(gl.ARRAY_BUFFER, null);
+            
+            unuseShader(pointFlower.program);
+            
+            for(var i = 0; i < pointFlower.numFlowers; i++) {
+                pointFlower.particles[i] = new BlossomParticle();
+            }
+        }
+
+        function initPointFlowers() {
+            pointFlower.area = Vector3.create(20.0, 20.0, 20.0);
+            pointFlower.area.x = pointFlower.area.y * renderSpec.aspect;
+            
+            pointFlower.fader.x = 10.0;
+            pointFlower.fader.y = pointFlower.area.z;
+            pointFlower.fader.z = 0.1;
+            
+            var PI2 = Math.PI * 2.0;
+            var tmpv3 = Vector3.create(0, 0, 0);
+            var tmpv = 0;
+            var symmetryrand = function() {return (Math.random() * 2.0 - 1.0);};
+            for(var i = 0; i < pointFlower.numFlowers; i++) {
+                var tmpprtcl = pointFlower.particles[i];
+                
+                tmpv3.x = symmetryrand() * 0.3 + 0.8;
+                tmpv3.y = symmetryrand() * 0.2 - 1.0;
+                tmpv3.z = symmetryrand() * 0.3 + 0.5;
+                Vector3.normalize(tmpv3);
+                tmpv = 2.0 + Math.random() * 1.0;
+                tmpprtcl.setVelocity(tmpv3.x * tmpv, tmpv3.y * tmpv, tmpv3.z * tmpv);
+                
+                tmpprtcl.setRotation(
+                    symmetryrand() * PI2 * 0.5,
+                    symmetryrand() * PI2 * 0.5,
+                    symmetryrand() * PI2 * 0.5
+                );
+                
+                tmpprtcl.setPosition(
+                    symmetryrand() * pointFlower.area.x,
+                    symmetryrand() * pointFlower.area.y,
+                    symmetryrand() * pointFlower.area.z
+                );
+                
+                tmpprtcl.setEulerAngles(
+                    Math.random() * Math.PI * 2.0,
+                    Math.random() * Math.PI * 2.0,
+                    Math.random() * Math.PI * 2.0
+                );
+                
+                tmpprtcl.setSize(0.9 + Math.random() * 0.1);
+            }
+        }
+
+        function renderPointFlowers() {
+            var PI2 = Math.PI * 2.0;
+            var limit = [pointFlower.area.x, pointFlower.area.y, pointFlower.area.z];
+            var repeatPos = function (prt, cmp, limit) {
+                if(Math.abs(prt.position[cmp]) - prt.size * 0.5 > limit) {
+                    if(prt.position[cmp] > 0) {
+                        prt.position[cmp] -= limit * 2.0;
+                    }
+                    else {
+                        prt.position[cmp] += limit * 2.0;
+                    }
+                }
+            };
+            var repeatEuler = function (prt, cmp) {
+                prt.euler[cmp] = prt.euler[cmp] % PI2;
+                if(prt.euler[cmp] < 0.0) {
+                    prt.euler[cmp] += PI2;
+                }
+            };
+            
+            for(var i = 0; i < pointFlower.numFlowers; i++) {
+                var prtcl = pointFlower.particles[i];
+                prtcl.update(timeInfo.delta, timeInfo.elapsed);
+                repeatPos(prtcl, 0, pointFlower.area.x);
+                repeatPos(prtcl, 1, pointFlower.area.y);
+                repeatPos(prtcl, 2, pointFlower.area.z);
+                repeatEuler(prtcl, 0);
+                repeatEuler(prtcl, 1);
+                repeatEuler(prtcl, 2);
+                
+                prtcl.alpha = 1.0;
+                
+                prtcl.zkey = (camera.matrix[2] * prtcl.position[0]
+                            + camera.matrix[6] * prtcl.position[1]
+                            + camera.matrix[10] * prtcl.position[2]
+                            + camera.matrix[14]);
+            }
+            
+            pointFlower.particles.sort(function(p0, p1){return p0.zkey - p1.zkey;});
+            
+            var ipos = pointFlower.positionArrayOffset;
+            var ieuler = pointFlower.eulerArrayOffset;
+            var imisc = pointFlower.miscArrayOffset;
+            for(var i = 0; i < pointFlower.numFlowers; i++) {
+                var prtcl = pointFlower.particles[i];
+                pointFlower.dataArray[ipos] = prtcl.position[0];
+                pointFlower.dataArray[ipos + 1] = prtcl.position[1];
+                pointFlower.dataArray[ipos + 2] = prtcl.position[2];
+                ipos += 3;
+                pointFlower.dataArray[ieuler] = prtcl.euler[0];
+                pointFlower.dataArray[ieuler + 1] = prtcl.euler[1];
+                pointFlower.dataArray[ieuler + 2] = prtcl.euler[2];
+                ieuler += 3;
+                pointFlower.dataArray[imisc] = prtcl.size;
+                pointFlower.dataArray[imisc + 1] = prtcl.alpha;
+                imisc += 2;
+            }
+            
+            gl.enable(gl.BLEND);
+            gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+            
+            var prog = pointFlower.program;
+            useShader(prog);
+            
+            gl.uniformMatrix4fv(prog.uniforms.uProjection, false, projection.matrix);
+            gl.uniformMatrix4fv(prog.uniforms.uModelview, false, camera.matrix);
+            gl.uniform3fv(prog.uniforms.uResolution, renderSpec.array);
+            gl.uniform3fv(prog.uniforms.uDOF, Vector3.arrayForm(camera.dof));
+            gl.uniform3fv(prog.uniforms.uFade, Vector3.arrayForm(pointFlower.fader));
+            
+            gl.bindBuffer(gl.ARRAY_BUFFER, pointFlower.buffer);
+            gl.bufferData(gl.ARRAY_BUFFER, pointFlower.dataArray, gl.DYNAMIC_DRAW);
+            
+            gl.vertexAttribPointer(prog.attributes.aPosition, 3, gl.FLOAT, false, 0, pointFlower.positionArrayOffset * Float32Array.BYTES_PER_ELEMENT);
+            gl.vertexAttribPointer(prog.attributes.aEuler, 3, gl.FLOAT, false, 0, pointFlower.eulerArrayOffset * Float32Array.BYTES_PER_ELEMENT);
+            gl.vertexAttribPointer(prog.attributes.aMisc, 2, gl.FLOAT, false, 0, pointFlower.miscArrayOffset * Float32Array.BYTES_PER_ELEMENT);
+            
+            // 多层渲染效果
+            for(var i = 1; i < 2; i++) {
+                var zpos = i * -2.0;
+                pointFlower.offset[0] = pointFlower.area.x * -1.0;
+                pointFlower.offset[1] = pointFlower.area.y * -1.0;
+                pointFlower.offset[2] = pointFlower.area.z * zpos;
+                gl.uniform3fv(prog.uniforms.uOffset, pointFlower.offset);
+                gl.drawArrays(gl.POINTS, 0, pointFlower.numFlowers);
+                
+                pointFlower.offset[0] = pointFlower.area.x * -1.0;
+                pointFlower.offset[1] = pointFlower.area.y *  1.0;
+                pointFlower.offset[2] = pointFlower.area.z * zpos;
+                gl.uniform3fv(prog.uniforms.uOffset, pointFlower.offset);
+                gl.drawArrays(gl.POINTS, 0, pointFlower.numFlowers);
+                
+                pointFlower.offset[0] = pointFlower.area.x *  1.0;
+                pointFlower.offset[1] = pointFlower.area.y * -1.0;
+                pointFlower.offset[2] = pointFlower.area.z * zpos;
+                gl.uniform3fv(prog.uniforms.uOffset, pointFlower.offset);
+                gl.drawArrays(gl.POINTS, 0, pointFlower.numFlowers);
+                
+                pointFlower.offset[0] = pointFlower.area.x *  1.0;
+                pointFlower.offset[1] = pointFlower.area.y *  1.0;
+                pointFlower.offset[2] = pointFlower.area.z * zpos;
+                gl.uniform3fv(prog.uniforms.uOffset, pointFlower.offset);
+                gl.drawArrays(gl.POINTS, 0, pointFlower.numFlowers);
+            }
+            
+            // 主渲染
+            pointFlower.offset[0] = 0.0;
+            pointFlower.offset[1] = 0.0;
+            pointFlower.offset[2] = 0.0;
+            gl.uniform3fv(prog.uniforms.uOffset, pointFlower.offset);
+            gl.drawArrays(gl.POINTS, 0, pointFlower.numFlowers);
+            
+            gl.bindBuffer(gl.ARRAY_BUFFER, null);
+            unuseShader(prog);
+            
+            gl.enable(gl.DEPTH_TEST);
+            gl.disable(gl.BLEND);
+        }
+
+        function createScene() {
+            createEffectLib();
+            createBackground();
+            createPointFlowers();
+            sceneStandBy = true;
+        }
+
+        function initScene() {
+            initBackground();
+            initPointFlowers();
+            
+            camera.position.z = pointFlower.area.z + projection.nearfar[0];
+            projection.angle = Math.atan2(pointFlower.area.y, camera.position.z + pointFlower.area.z) * 180.0 / Math.PI * 2.0;
+            Matrix44.loadProjection(projection.matrix, renderSpec.aspect, projection.angle, projection.nearfar[0], projection.nearfar[1]);
+        }
+
+        function renderScene() {
+            Matrix44.loadLookAt(camera.matrix, camera.position, camera.lookat, camera.up);
+            
+            gl.enable(gl.DEPTH_TEST);
+            
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            gl.viewport(0, 0, renderSpec.width, renderSpec.height);
+            gl.clearColor(0.02, 0.01, 0.08, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            
+            renderBackground();
+            renderPointFlowers();
+        }
+
+        function onResize() {
+            makeCanvasFullScreen(document.getElementById("sakura"));
+            setViewports();
+            if(sceneStandBy) {
+                initScene();
+            }
+        }
+
+        function setViewports() {
+            renderSpec.setSize(gl.canvas.width, gl.canvas.height);
+            
+            gl.clearColor(0.2, 0.2, 0.5, 1.0);
+            gl.viewport(0, 0, renderSpec.width, renderSpec.height);
+        }
+
+        function render() {
+            renderScene();
+        }
+
+        var animating = true;
+
+        function animate() {
+            var curdate = new Date();
+            timeInfo.elapsed = (curdate - timeInfo.start) / 1000.0;
+            timeInfo.delta = (curdate - timeInfo.prev) / 1000.0;
+            timeInfo.prev = curdate;
+            
+            if(animating) requestAnimationFrame(animate);
+            render();
+        }
+
+        function makeCanvasFullScreen(canvas) {
+            var b = document.body;
+            var d = document.documentElement;
+            var fullw = Math.max(b.clientWidth , b.scrollWidth, d.scrollWidth, d.clientWidth);
+            var fullh = Math.max(b.clientHeight , b.scrollHeight, d.scrollHeight, d.clientHeight);
+            canvas.width = fullw;
+            canvas.height = fullh;
+        }
+
+        // 初始化
+        window.addEventListener('load', function() {
+            var canvas = document.getElementById("sakura");
+            try {
+                makeCanvasFullScreen(canvas);
+                gl = canvas.getContext('experimental-webgl') || canvas.getContext('webgl');
+            } catch(e) {
+                console.error("WebGL not supported.", e);
+                return;
+            }
+            
+            window.addEventListener('resize', onResize);
+            
+            setViewports();
+            createScene();
+            initScene();
+            
+            timeInfo.start = new Date();
+            timeInfo.prev = timeInfo.start;
+            animate();
+        });
+
+        // 设置 requestAnimationFrame
+        (function (w, r) {
+            w['r'+r] = w['r'+r] || w['webkitR'+r] || w['mozR'+r] || w['msR'+r] || w['oR'+r] || function(c){ w.setTimeout(c, 1000 / 60); };
+        })(window, 'equestAnimationFrame');
+
+        // 登录注册功能
+        function showLogin() {
+            document.getElementById('loginForm').classList.remove('form-hidden');
+            document.getElementById('loginForm').classList.add('form-visible');
+            document.getElementById('registerForm').classList.remove('form-visible');
+            document.getElementById('registerForm').classList.add('form-hidden');
+            clearMessages();
+        }
+
+        function showRegister() {
+            document.getElementById('registerForm').classList.remove('form-hidden');
+            document.getElementById('registerForm').classList.add('form-visible');
+            document.getElementById('loginForm').classList.remove('form-visible');
+            document.getElementById('loginForm').classList.add('form-hidden');
+            clearMessages();
+        }
+
+        function clearMessages() {
+            const messages = document.querySelectorAll('.success-message, .error-message');
+            messages.forEach(msg => {
+                msg.style.display = 'none';
+                msg.textContent = '';
+            });
+        }
+
+        function showMessage(elementId, message, isError = false) {
+            clearMessages();
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            
+            // 3秒后自动隐藏消息
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 3000);
+        }
+
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function validatePassword(password) {
+            // 密码至少6位，包含字母和数字
+            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/;
+            return passwordRegex.test(password);
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            // 基本验证
+            if (!username || !password) {
+                showMessage('loginError', '请填写所有必填字段', true);
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include', // 包含session cookie
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+                console.log('Login response:', data);
+
+                if (response.ok) {
+                    showMessage('loginSuccess', `欢迎回来，${data.username}！登录成功！`);
+                    // 登录成功后跳转到服务器指定的页面
+                    console.log('Redirecting to:', data.redirect);
+                    setTimeout(() => {
+                        console.log('Executing redirect to:', data.redirect || '/discover');
+                        window.location.href = data.redirect || '/discover';
+                    }, 1500);
+                } else {
+                    showMessage('loginError', data.error || '登录失败，请重试', true);
+                }
+            } catch (error) {
+                console.error('登录请求失败:', error);
+                showMessage('loginError', '网络连接失败，请检查服务器是否启动', true);
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('regUsername').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            
+            // 基本验证
+            if (!username || !email || !password || !confirmPassword) {
+                showMessage('registerError', '请填写所有必填字段', true);
+                return;
+            }
+
+            // 用户名验证
+            if (username.length < 3) {
+                showMessage('registerError', '用户名至少需要3个字符', true);
+                return;
+            }
+
+            // 邮箱验证
+            if (!validateEmail(email)) {
+                showMessage('registerError', '请输入有效的邮箱地址', true);
+                return;
+            }
+
+            // 密码验证
+            if (!validatePassword(password)) {
+                showMessage('registerError', '密码至少6位，需包含字母和数字', true);
+                return;
+            }
+
+            // 确认密码验证
+            if (password !== confirmPassword) {
+                showMessage('registerError', '两次输入的密码不一致', true);
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include', // 包含session cookie
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage('registerSuccess', '注册成功！即将跳转到登录页面...');
+                    
+                    // 清空表单
+                    document.getElementById('regUsername').value = '';
+                    document.getElementById('regEmail').value = '';
+                    document.getElementById('regPassword').value = '';
+                    document.getElementById('regConfirmPassword').value = '';
+                    
+                    // 2秒后自动切换到登录页面
+                    setTimeout(() => {
+                        showLogin();
+                    }, 2000);
+                } else {
+                    showMessage('registerError', data.error || '注册失败，请重试', true);
+                }
+            } catch (error) {
+                console.error('注册请求失败:', error);
+                showMessage('registerError', '网络连接失败，请检查服务器是否启动', true);
+            }
+        }
+
+        // 添加键盘事件监听
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                const loginForm = document.getElementById('loginForm');
+                const registerForm = document.getElementById('registerForm');
+                
+                if (loginForm.classList.contains('form-visible')) {
+                    const loginButton = loginForm.querySelector('button[type="submit"]');
+                    if (loginButton) loginButton.click();
+                } else if (registerForm.classList.contains('form-visible')) {
+                    const registerButton = registerForm.querySelector('button[type="submit"]');
+                    if (registerButton) registerButton.click();
+                }
+            }
+        });
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 确保初始状态正确
+            showLogin();
+            
+            // 添加输入框焦点效果
+            const inputs = document.querySelectorAll('.input-field');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'scale(1.02)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
