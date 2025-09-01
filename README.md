@@ -24,31 +24,31 @@ lxy、wkh、pzh、gmy
 
 左边栏和上边栏可以进行隐藏
 
-<img width="394" height="197" alt="image" src="https://github.com/user-attachments/assets/f29d1576-ba5a-48d3-bb07-13e550324aea" />
+<img width="800" height="600" alt="image" src="https://github.com/user-attachments/assets/f29d1576-ba5a-48d3-bb07-13e550324aea" />
 
-<img width="381" height="193" alt="image" src="https://github.com/user-attachments/assets/aa4781dd-98d0-4ee0-86df-0de5a61f110d" />
+<img width="800" height="600" alt="image" src="https://github.com/user-attachments/assets/aa4781dd-98d0-4ee0-86df-0de5a61f110d" />
 
 ## 用户信息页面
 
-<img width="454" height="296" alt="image" src="https://github.com/user-attachments/assets/48533f86-eee3-41cc-be8f-e8f270d0b89b" />
+<img width="800" height="600" alt="image" src="https://github.com/user-attachments/assets/48533f86-eee3-41cc-be8f-e8f270d0b89b" />
 
 ## 上传图片
 
-<img width="357" height="216" alt="image" src="https://github.com/user-attachments/assets/bff67c5c-7061-4335-9d11-df2c7c627944" />
+<img width="800" height="600" alt="image" src="https://github.com/user-attachments/assets/bff67c5c-7061-4335-9d11-df2c7c627944" />
 
-<img width="357" height="217" alt="image" src="https://github.com/user-attachments/assets/5de91c7c-1bef-4f11-aef3-826b550a4e48" />
+<img width="800" height="600" alt="image" src="https://github.com/user-attachments/assets/5de91c7c-1bef-4f11-aef3-826b550a4e48" />
 
 ## 绘制动漫角色与海报
 
-<img width="852" height="470" alt="image" src="https://github.com/user-attachments/assets/ec992bb0-ecf3-497c-bbce-2e7a06d7d08f" />
+<img width="800" height="600" alt="image" src="https://github.com/user-attachments/assets/ec992bb0-ecf3-497c-bbce-2e7a06d7d08f" />
 
-<img width="869" height="465" alt="image" src="https://github.com/user-attachments/assets/1e9b0009-ff23-40c7-8749-d65c273ba6b7" />
+<img width="800" height="600" alt="image" src="https://github.com/user-attachments/assets/1e9b0009-ff23-40c7-8749-d65c273ba6b7" />
 
 ## 对话页面
 
-<img width="760" height="428" alt="image" src="https://github.com/user-attachments/assets/e49b542d-d3e5-4ac3-a169-521429e9a65d" />
+<img width="800" height="600" alt="image" src="https://github.com/user-attachments/assets/e49b542d-d3e5-4ac3-a169-521429e9a65d" />
 
-<img width="1332" height="780" alt="image" src="https://github.com/user-attachments/assets/47bf358d-e4b1-4f7a-9eb2-44128e6ef17f" />
+<img width="800" height="600" alt="image" src="https://github.com/user-attachments/assets/47bf358d-e4b1-4f7a-9eb2-44128e6ef17f" />
 
 
 # 使用须知
