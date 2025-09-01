@@ -63,10 +63,10 @@ lxy、wkh、pzh、gmy
 
 [项目根目录]/
 
-├── Image         
-
-├── live2d-widget-master        
+├── Image        
 
 ├── live2d
+
+├── live2d-widget-master        
 
 ├── ···
