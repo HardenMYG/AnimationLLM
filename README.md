@@ -14,11 +14,11 @@ lxy、wkh、pzh、gmy
 
 ## 登陆页面
 
-<img width="421" height="317" alt="image" src="https://github.com/user-attachments/assets/9f4495f2-279c-435a-8c0b-adac672bceb1" />
+<img width="800" height="600" alt="image" src="https://github.com/user-attachments/assets/9f4495f2-279c-435a-8c0b-adac672bceb1" />
 
 ## 导航页面
 
-<img width="358" height="187" alt="image" src="https://github.com/user-attachments/assets/c5e7519d-b8ce-4ecd-9cbc-0df0ef81f73d" />
+<img width="800" height="600" alt="image" src="https://github.com/user-attachments/assets/c5e7519d-b8ce-4ecd-9cbc-0df0ef81f73d" />
 
 ## 聊天页面
 
