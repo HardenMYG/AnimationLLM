@@ -15,7 +15,11 @@ Internship and training group assignment
 代码结构组织如下：
 
 [项目根目录]/
-├── Image            
-├── live2d-widget-master               
+
+├── Image         
+
+├── live2d-widget-master        
+
 ├── live2d
+
 ├── ···
