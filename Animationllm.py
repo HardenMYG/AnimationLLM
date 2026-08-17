@@ -27,7 +27,7 @@ except ImportError:
     pass
 
 # 豆包API设置 - 统一使用多模态模型
-ARK_API_KEY = os.getenv("ARK_API_KEY", "014a18da-8e40-4de2-8139-030cf822a3e3")
+ARK_API_KEY = os.getenv("ARK_API_KEY", "")
 MULTIMODAL_MODEL = "doubao-seed-1-6-250615"  # 统一的多模态模型
 
 # 初始化OpenAI客户端
@@ -36,7 +36,7 @@ client = OpenAI(
     base_url="https://ark.cn-beijing.volces.com/api/v3"
 )
 
-os.environ["DASHSCOPE_API_KEY"] = "sk-9f33ea712a164d2bb40059c101467eb0"
+os.environ["DASHSCOPE_API_KEY"] = ""
 embeddings = DashScopeEmbeddings(model="text-embedding-v1")
 
 def load_anime_data():
